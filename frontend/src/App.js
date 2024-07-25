@@ -12,7 +12,8 @@ const { TabPane } = Tabs;
 const { Content } = Layout;
 const { Title } = Typography;
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+console.log(API_URL);
 
 const App = () => {
   const [data, setData] = useState([{ category: '', value: 0 }]);

@@ -2,13 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')  # Use the 'Agg' backend which doesn't require a GUI
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 import base64
 from sklearn.linear_model import LinearRegression
 import numpy as np
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -119,4 +123,5 @@ def internal_error(error):
     return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
+    port = int(os.getenv('FLASK_RUN_PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
