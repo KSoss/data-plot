@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
+import traceback
 import io
 import base64
 from sklearn.linear_model import LinearRegression
@@ -49,7 +50,6 @@ def handle_data():
         chart_type = request.json.get('chartType', 'bar')
         colors = request.json.get('colors', {})
         
-        # Input validation
         if not data or not isinstance(data, list):
             return jsonify({'error': 'Invalid data format'}), 400
         
@@ -69,21 +69,25 @@ def analyze_data():
         if not data or not isinstance(data, list):
             return jsonify({'error': 'Invalid data format. Expected a list of data points.'}), 400
         
+        if len(data) < 2:
+            return jsonify({'insufficient_data': True, 'message': 'Insufficient data for analysis. At least two data points are required.'}), 200
+        
         df = pd.DataFrame(data)
         
         if 'value' not in df.columns:
             return jsonify({'error': 'Data must contain a "value" column.'}), 400
         
         analysis = {
+            'count': len(df),
             'mean': float(df['value'].mean()),
             'median': float(df['value'].median()),
-            'std_dev': float(df['value'].std()),
             'min': float(df['value'].min()),
             'max': float(df['value'].max()),
-            'total': float(df['value'].sum())
+            'total': float(df['value'].sum()),
+            'std_dev': float(df['value'].std())
         }
         
-        return jsonify(analysis)
+        return jsonify({'insufficient_data': False, 'analysis': analysis})
     except Exception as e:
         app.logger.error(f"An error occurred: {str(e)}")
         app.logger.error(traceback.format_exc())
@@ -93,7 +97,7 @@ def analyze_data():
 def forecast_data():
     try:
         data = request.json['data']
-        steps = request.json.get('steps', 3)  # Default to forecasting 3 steps ahead
+        steps = request.json.get('steps', 3)
         
         df = pd.DataFrame(data)
         X = np.arange(len(df)).reshape(-1, 1)

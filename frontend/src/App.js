@@ -79,7 +79,6 @@ const App = () => {
         try {
           const parsedData = JSON.parse(e.target.result);
           setData(parsedData);
-          // Generate colors for new categories
           const newColors = {};
           parsedData.forEach(item => {
             if (!(item.category in colors)) {

@@ -19,7 +19,6 @@ const DataInput = ({
   const [tempCategories, setTempCategories] = useState(data.map(item => item.category));
 
   useEffect(() => {
-    // Assign colors to any categories that don't have them
     const newColors = {...colors};
     let colorsChanged = false;
     data.forEach(item => {
@@ -53,7 +52,6 @@ const DataInput = ({
       newData[index].category = newCategory;
       setData(newData);
 
-      // If the new category doesn't have a color, assign it the color of the old category or a new random color
       if (!(newCategory in colors)) {
         setColors(prevColors => ({
           ...prevColors,
