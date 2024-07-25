@@ -1,9 +1,18 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Empty } from 'antd';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Forecast = ({ data, forecast, color }) => {
-  if (!forecast) return null;
+  if (!forecast) {
+    return (
+      <Card title="Data Forecast" className="mt-8">
+        <Empty
+          description="Awaiting data generation"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      </Card>
+    );
+  }
 
   const combinedData = [...data, ...forecast];
 

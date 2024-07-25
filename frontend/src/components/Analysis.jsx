@@ -1,8 +1,17 @@
 import React from 'react';
-import { Card, Table } from 'antd';
+import { Card, Table, Empty } from 'antd';
 
 const Analysis = ({ analysis }) => {
-  if (!analysis) return null;
+  if (!analysis) {
+    return (
+      <Card title="Data Analysis" className="mt-8">
+        <Empty
+          description="Awaiting data generation"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      </Card>
+    );
+  }
 
   const dataSource = Object.entries(analysis).map(([metric, value]) => ({
     key: metric,
